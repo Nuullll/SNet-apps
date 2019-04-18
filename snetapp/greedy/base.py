@@ -58,6 +58,19 @@ class GreedyBaseWorker(Worker):
             'pb_phases': True,
             'pattern_firing_rate': 1.0,     # unit: spikes/dt
             'background_firing_rate': 20.,
+            't_background_phase': 20,       # unit: dt
         }
 
         return self.infer(options)
+
+    def train(self):
+        self.logger.info("Start training.")
+
+        self.network.training_mode()
+
+        for i, (image, label) in enumerate(self.dataset.training_set):
+
+            log_prefix = f"[#{i}] label={label} "
+            self.logger.info(log_prefix + "Feeding image.")
+
+

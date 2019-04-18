@@ -10,6 +10,10 @@
 import os
 from datetime import datetime
 import json
+from snet.dataset.mnist import MNISTLoader
+from snet.core import Network
+import logging
+import sys
 
 
 class Worker(object):
@@ -24,9 +28,31 @@ class Worker(object):
         else:
             self.options = self.infer(options)
 
-    @property
-    def results_dir(self):
-        return os.path.join(os.path.dirname(__file__), 'results')
+        self._prepare()
+
+        self._init_logger()
+
+        self._load_dataset()
+
+        self._load_network()
+
+    def _init_logger(self):
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            handlers=[
+                logging.StreamHandler(),
+                logging.FileHandler(os.path.join(self.result_dir, "worker.log"))
+            ]
+        )
+
+        self.logger = logging.getLogger()
+
+    def _load_dataset(self):
+        self.dataset = MNISTLoader(self.options)
+
+    def _load_network(self):
+        self.network = Network(self.options)
 
     def infer(self, options):
         """
@@ -69,18 +95,28 @@ class Worker(object):
 
         return self.infer(options)
 
-    def export_options(self, filename):
+    def _export_options(self, filename):
         with open(filename, 'w') as file:
             json.dump(self.options, file)
 
-    def prepare(self):
+    def _prepare(self):
         """
         Creates `results` directory for training.
         """
-        path = os.path.join(self.results_dir, os.path.basename(__file__),
+        file_path = sys.modules[self.__module__].__file__
+
+        path = os.path.join(os.path.join(os.path.dirname(file_path), 'results'), os.path.basename(file_path),
                             datetime.now().strftime("%c").replace(" ", "-"))
         os.makedirs(path)
 
         # record options
         option_file = os.path.join(path, "options.json")
-        self.export_options(option_file)
+        self._export_options(option_file)
+
+        self.result_dir = path
+
+    def train(self):
+        raise NotImplementedError("Worker.train() is not implemented.")
+
+    def test(self):
+        raise NotImplementedError("Worker.test() is not implemented.")

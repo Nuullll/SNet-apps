@@ -74,11 +74,16 @@ class GreedyBaseWorker(Worker):
 
             start_time = self.network.time
 
-            self.logger.info(log_prefix + "Feeding image." + f"@{start_time}")
+            self.logger.info(log_prefix + "Feeding image. " + f"@{start_time}")
             self.network.feed_image(image)
 
             self.network.learn_current_image()
 
             finish_time = self.network.time
-            self.logger.info(log_prefix + "Learned." + f"@{finish_time} (dt={finish_time-start_time})")
+            self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
 
+
+if __name__ == "__main__":
+    worker = GreedyBaseWorker()
+
+    worker.train()

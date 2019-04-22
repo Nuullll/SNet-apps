@@ -103,10 +103,10 @@ class Worker(object):
         """
         Creates `results` directory for training.
         """
-        file_path = sys.modules[self.__module__].__file__
+        file_path = os.path.abspath(sys.modules[self.__module__].__file__)
 
-        path = os.path.join(os.path.join(os.path.dirname(file_path), 'results'), os.path.basename(file_path),
-                            datetime.now().strftime("%c").replace(" ", "-"))
+        path = os.path.join(os.path.dirname(file_path), 'results', os.path.basename(file_path),
+                            datetime.now().strftime("%c").replace(" ", "-").replace(":", "-"))
         os.makedirs(path)
 
         # record options

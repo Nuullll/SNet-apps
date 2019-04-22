@@ -71,6 +71,14 @@ class GreedyBaseWorker(Worker):
         for i, (image, label) in enumerate(self.dataset.training_set):
 
             log_prefix = f"[#{i}] label={label} "
-            self.logger.info(log_prefix + "Feeding image.")
 
+            start_time = self.network.time
+
+            self.logger.info(log_prefix + "Feeding image." + f"@{start_time}")
+            self.network.feed_image(image)
+
+            self.network.learn_current_image()
+
+            finish_time = self.network.time
+            self.logger.info(log_prefix + "Learned." + f"@{finish_time} (dt={finish_time-start_time})")
 

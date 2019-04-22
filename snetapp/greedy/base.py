@@ -82,6 +82,9 @@ class GreedyBaseWorker(Worker):
             finish_time = self.network.time
             self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
 
+            if self.network.time % 220 == 0:
+                self.network.W.plot_weight_map()
+
 
 if __name__ == "__main__":
     worker = GreedyBaseWorker()

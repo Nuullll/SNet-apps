@@ -7,6 +7,7 @@
 # @Email: vfirst218@gmail.com
 
 
+import os
 from snetapp import Worker
 
 
@@ -80,9 +81,50 @@ class GreedyBaseWorker(Worker):
 
             finish_time = self.network.time
             self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
+            self.logger.info(log_prefix + f"Thresholds={self.network.OUTPUT.v_th.numpy()}")
 
-            if self.network.time % 10 == 0:
-                self.network.W.plot_weight_map()
+            # if self.network.time % 10 == 0:
+            #     self.network.W.plot_weight_map()
+
+        self.post_train()
+
+    def post_train(self):
+        """
+        Save model after training.
+        """
+
+        self.network.save_model(self.result_dir)
+
+        self.summarize('train')
+
+        self.send()
+
+    def summarize(self, phase='train'):
+        def to_html(dict):
+            html = ""
+            for key, value in dict.items():
+                html += f"{key}: {value}<br>"
+
+            return html
+
+        self.summary['options'] = to_html(self.options)
+
+        image_file = os.path.join(self.result_dir, 'weights.jpg')
+        self.network.W.plot_weight_map(image_file)
+
+        self.summary['image_file'] = image_file
+
+        phase_summary = {
+            'v_th': self.network.OUTPUT.v_th,
+            'time': self.network.time,
+            'sample_count': len(self.dataset.training_set if phase == 'train' else len(self.dataset.testing_set)),
+        }
+
+        self.summary[phase] = to_html(phase_summary)
+
+    def test(self):
+        # TODO: evaluation
+        pass
 
 
 if __name__ == "__main__":

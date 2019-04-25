@@ -14,6 +14,9 @@ from snet.dataset.mnist import MNISTLoader
 from snet.core import Network
 import logging
 import sys
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Attachment, Content, Email
+import base64
 
 
 class Worker(object):
@@ -28,6 +31,8 @@ class Worker(object):
         else:
             self.options = self.infer(options)
 
+        self.summary = {}
+
         self._prepare()
 
         self._init_logger()
@@ -35,6 +40,9 @@ class Worker(object):
         self._load_dataset()
 
         self._load_network()
+
+        # sendgrid service
+        self.sg_key = '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'
 
     def _init_logger(self):
         logging.basicConfig(
@@ -120,3 +128,43 @@ class Worker(object):
 
     def test(self):
         raise NotImplementedError("Worker.test() is not implemented.")
+
+    def send(self):
+        """
+        Sends summary email.
+        """
+        sg = SendGridAPIClient(self.sg_key)
+
+        def to_html():
+            html = ""
+
+            for key, value in self.summary.items():
+                html += f"<p><strong>{key}: </strong>{value}</p>"
+
+            html += '<img src="cid:weights"/>'
+
+            return html
+
+        message = Mail(
+            from_email=Email('report@snet.com'),
+            to_email=Email('vfirst218@gmail.com'),
+            subject='[SNET] Summary',
+            content=Content('text/html', to_html())
+        )
+
+        image_file = self.summary['image_file']
+        with open(image_file, 'rb') as f:
+            data = f.read()
+            f.close()
+
+        encoded = base64.b64encode(data).decode()
+        attachment = Attachment()
+        attachment.content = encoded
+        attachment.type = 'image/jpg'
+        attachment.filename = os.path.basename(image_file)
+        attachment.disposition = 'inline'
+        attachment.content_id = 'weights'
+
+        message.add_attachment(attachment)
+
+        sg.client.mail.send.post(request_body=message.get())

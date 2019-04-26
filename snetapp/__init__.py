@@ -15,7 +15,7 @@ from snet.core import Network
 import logging
 import sys
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Attachment, Content, Email, To
+from sendgrid.helpers.mail import Mail, Attachment, Content
 import base64
 import pickle
 
@@ -147,8 +147,8 @@ class Worker(object):
             return html
 
         message = Mail(
-            from_email=Email('report@snet.com', name='SNET实验结果'),
-            to_emails=To('vfirst218@gmail.com'),
+            from_email='report@snet.com',
+            to_emails=['vfirst218@gmail.com'],
             subject='[SNET] Summary',
             html_content=Content('text/html', to_html())
         )
@@ -159,12 +159,8 @@ class Worker(object):
             f.close()
 
         encoded = base64.b64encode(data).decode()
-        attachment = Attachment()
-        attachment.content = encoded
-        attachment.type = 'image/jpg'
-        attachment.filename = os.path.basename(image_file)
-        attachment.disposition = 'inline'
-        attachment.content_id = 'weights'
+        attachment = Attachment(file_content=encoded, file_type='image/jpg', file_name=os.path.basename(image_file),
+                                disposition='inline', content_id='weights')
 
         message.add_attachment(attachment)
 

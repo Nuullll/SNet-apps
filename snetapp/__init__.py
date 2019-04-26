@@ -15,14 +15,18 @@ from snet.core import Network
 import logging
 import sys
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Attachment, Content, Email
+from sendgrid.helpers.mail import Mail, Attachment, Content, Email, To
 import base64
+import pickle
 
 
 class Worker(object):
     """
     Abstract worker to do the training and evaluation work.
     """
+
+    # sendgrid service
+    sg_key = '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'
 
     def __init__(self, options=None):
 
@@ -40,9 +44,6 @@ class Worker(object):
         self._load_dataset()
 
         self._load_network()
-
-        # sendgrid service
-        self.sg_key = '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'
 
     def _init_logger(self):
         logging.basicConfig(
@@ -146,8 +147,8 @@ class Worker(object):
             return html
 
         message = Mail(
-            from_email=Email('report@snet.com'),
-            to_emails=Email('vfirst218@gmail.com'),
+            from_email=Email('report@snet.com', name='SNET实验结果'),
+            to_emails=To('vfirst218@gmail.com'),
             subject='[SNET] Summary',
             html_content=Content('text/html', to_html())
         )
@@ -168,3 +169,7 @@ class Worker(object):
         message.add_attachment(attachment)
 
         sg.client.mail.send.post(request_body=message.get())
+
+    def save(self):
+        with open(os.path.join(self.result_dir, 'worker.obj'), 'wb') as f:
+            pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)

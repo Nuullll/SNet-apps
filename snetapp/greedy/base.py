@@ -57,7 +57,7 @@ class GreedyBaseWorker(Worker):
 
             'greedy': True,
             'pattern_firing_rate': 1.0,     # unit: spikes/dt
-            'background_firing_rate': 20.,
+            'background_firing_rate': 10.,
             't_background_phase': 20,       # unit: dt
         }
 
@@ -83,8 +83,8 @@ class GreedyBaseWorker(Worker):
             self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
             self.logger.info(log_prefix + f"Thresholds={self.network.OUTPUT.v_th.numpy()}")
 
-            # if self.network.time % 10 == 0:
-            #     self.network.W.plot_weight_map()
+            if i % 1000 == 0:
+                self.network.W.plot_weight_map(out_file=os.path.join(self.result_dir, f'{i}-weights.jpg'))
 
         self.post_train()
 

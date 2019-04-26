@@ -147,9 +147,9 @@ class Worker(object):
 
         message = Mail(
             from_email=Email('report@snet.com'),
-            to_email=Email('vfirst218@gmail.com'),
+            to_emails=Email('vfirst218@gmail.com'),
             subject='[SNET] Summary',
-            content=Content('text/html', to_html())
+            html_content=Content('text/html', to_html())
         )
 
         image_file = self.summary['image_file']

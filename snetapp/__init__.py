@@ -352,6 +352,7 @@ class Worker(object):
 
                 predicted = self.options.get('include_categories')[max_ind]
             else:
+                score = None
                 predicted = label
 
             self.predict_labels.append(predicted)
@@ -406,6 +407,7 @@ class Worker(object):
 
                 predicted = self.options.get('include_categories')[max_ind]
             else:
+                score = None
                 predicted = label
 
             self.predict_labels.append(predicted)

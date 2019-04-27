@@ -28,40 +28,14 @@ class GreedyBaseWorker(Worker):
         super(GreedyBaseWorker, self).__init__(self.options)
 
     def get_default_options(self):
-        options = {
-            'image_size': (28, 28),
-            'include_categories': [0, 1, 2],
-            # input_number (inferred)
-            'output_number': 12,
+        options = super(GreedyBaseWorker, self).get_default_options()
 
-            'dt': 1e-3,     # unit: s
-
-            't_training_image': 200,    # unit: dt
-            't_testing_image': 300,
-
-            'tracker_size': 100,
-
-            # synapses
-            'w_min': 0.1,
-            'w_max': 5.0,
-            'w_init': 'random',
-            'learning_rate_p': 0.8,
-            'learning_rate_m': 0.8,
-            'tau_p': 5,         # unit: dt
-            'tau_m': 5,
-
-            # LIF
-            'v_th_rest': 0.4,
-            'tau': 200.,        # unit: dt
-            'refractory': 0,
-            'res': 1.,
-            'adapt_factor': 1.,
-
+        options.update({
             'greedy': True,
-            'pattern_firing_rate': 1.0,     # unit: spikes/dt
+            'pattern_firing_rate': 1.0,  # unit: spikes/dt
             'background_firing_rate': 12.,
-            't_background_phase': 20,       # unit: dt
-        }
+            't_background_phase': 20,  # unit: dt
+        })
 
         return self.infer(options)
 

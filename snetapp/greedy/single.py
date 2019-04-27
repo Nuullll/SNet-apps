@@ -26,7 +26,42 @@ class GreedySingleLearner(GreedyBaseWorker):
         options = super(GreedySingleLearner, self).get_default_options()
 
         options.update({
-            'single': True
+            'include_categories': list(range(10)),
+            'single': True,
+            'output_number': 1
         })
 
         return self.infer(options)
+
+    def train(self):
+        self.logger.info("Start single pattern learning.")
+
+        self.network.training_mode()
+
+        image, label = self.dataset.training_set[0]
+
+        epochs = 100
+
+        for i in range(epochs):
+
+            log_prefix = f"[Epoch#{i}] label={label} "
+
+            start_time = self.network.time
+
+            self.network.feed_image(image)
+
+            self.network.learn_current_image()
+
+            finish_time = self.network.time
+
+            self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
+
+            self.network.W.plot_weight_map()
+
+        self.post_train()
+
+
+if __name__ == '__main__':
+    worker = GreedySingleLearner()
+
+    worker.train()

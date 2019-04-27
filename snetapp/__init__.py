@@ -28,6 +28,15 @@ class Worker(object):
     # sendgrid service
     sg_key = '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'
 
+    @classmethod
+    def load(cls, path):
+        with open(os.path.join(path, 'worker.pickle'), 'rb') as f:
+            worker = pickle.load(f)
+
+        worker._init_logger()
+
+        return worker
+
     def __init__(self, options=None):
 
         if options is None:
@@ -45,6 +54,16 @@ class Worker(object):
 
         self._load_network()
 
+        self.reset_test_states()
+
+    def reset_test_states(self):
+        self.train_responses = []
+        self.test_responses = []
+        self.train_labels = []
+        self.test_labels = []
+
+        self.save()
+
     def _init_logger(self):
         logging.basicConfig(
             level=logging.INFO,
@@ -55,7 +74,9 @@ class Worker(object):
             ]
         )
 
-        self.logger = logging.getLogger()
+    @property
+    def logger(self):
+        return logging.getLogger()
 
     def _load_dataset(self):
         self.dataset = MNISTLoader(self.options)
@@ -83,7 +104,9 @@ class Worker(object):
             'dt': 1e-3,     # unit: s
 
             't_training_image': 200,    # unit: dt
-            't_testing_image': 1000,
+            't_testing_image': 300,
+
+            'tracker_size': 100,
 
             # synapses
             'w_min': 0.1,
@@ -99,7 +122,7 @@ class Worker(object):
             'tau': 200.,        # unit: dt
             'refractory': 0,
             'res': 1.,
-
+            'adapt_factor': 1.
         }
 
         return self.infer(options)
@@ -123,12 +146,6 @@ class Worker(object):
         self._export_options(option_file)
 
         self.result_dir = path
-
-    def train(self):
-        raise NotImplementedError("Worker.train() is not implemented.")
-
-    def test(self):
-        raise NotImplementedError("Worker.test() is not implemented.")
 
     def send(self):
         """
@@ -167,5 +184,5 @@ class Worker(object):
         sg.client.mail.send.post(request_body=message.get())
 
     def save(self):
-        with open(os.path.join(self.result_dir, 'worker.obj'), 'wb') as f:
+        with open(os.path.join(self.result_dir, 'worker.pickle'), 'wb') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)

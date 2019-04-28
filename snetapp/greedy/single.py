@@ -73,7 +73,8 @@ class GreedySingleLearner(GreedyBaseWorker):
 
             finish_time = self.network.time
 
-            self.logger.info(log_prefix + f"Score={self.score()} " + f"@{finish_time} (dt={finish_time-start_time})")
+            pscore, bscore = self.score()
+            self.logger.info(log_prefix + f"P={pscore}, B={bscore} " + f"@{finish_time} (dt={finish_time-start_time})")
 
             self.network.W.plot_weight_map()
 
@@ -90,9 +91,10 @@ class GreedySingleLearner(GreedyBaseWorker):
         binarized_weights = binarize(self.network.W.weights.view(*image_size),
                                      (self.network.W.w_min, self.network.W.w_max))
 
-        score = (binarized_image == binarized_weights).float().sum() / self.options.get('input_number')
+        pattern_score = binarized_weights[binarized_image].float().sum() / binarized_image.float().sum()
+        background_score = (~binarized_weights[~binarized_image]).float().sum() / (~binarized_image).float().sum()
 
-        return score
+        return pattern_score, background_score
 
 
 if __name__ == '__main__':

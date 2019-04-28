@@ -44,7 +44,9 @@ class Worker(object):
         if options is None:
             self.options = self.get_default_options()
         else:
-            self.options = self.infer(options)
+            self.options = options
+
+        self.options = self.infer(self.options)
 
         self.summary = {}
 
@@ -127,7 +129,7 @@ class Worker(object):
             'adapt_factor': 1.1
         }
 
-        return self.infer(options)
+        return options
 
     def _export_options(self, filename):
         with open(filename, 'w') as file:

@@ -18,7 +18,7 @@ class OriginalBaseWorker(Worker):
         if options is None:
             self.options = self.get_default_options()
         else:
-            self.options = self.infer(options)
+            self.options = options
 
         super(OriginalBaseWorker, self).__init__(self.options)
 
@@ -29,4 +29,4 @@ class OriginalBaseWorker(Worker):
             'pattern_firing_rate': 1.,  # unit: spikes/dt
         })
 
-        return self.infer(options)
+        return options

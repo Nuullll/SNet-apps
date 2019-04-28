@@ -8,8 +8,6 @@
 
 
 from snetapp.original.base import OriginalBaseWorker
-from random import random
-import torch
 
 
 class OriginalSingleLearner(OriginalBaseWorker):
@@ -17,7 +15,7 @@ class OriginalSingleLearner(OriginalBaseWorker):
         if options is None:
             self.options = self.get_default_options()
         else:
-            self.options = self.infer(options)
+            self.options = options
 
         super(OriginalSingleLearner, self).__init__(self.options)
 
@@ -32,21 +30,27 @@ class OriginalSingleLearner(OriginalBaseWorker):
             'include_categories': list(range(10)),
             'single': True,
             'output_number': 1,
-            'epochs': 100,
+            'epochs': 10000,
 
-            'background_firing_rate': 10.,
+            'pattern_firing_rate': 1.,
+            't_training_image': 200,
             'learning_rate_p': 1.0,
             'learning_rate_m': 1.0,
+            'decay': 3e-5,
             'scale_factor': 0.1
         })
 
-        return self.infer(options)
+        return options
 
     def infer(self, options):
         options = super(OriginalSingleLearner, self).infer(options)
 
-        options['learning_rate_p'] *= options.get('scale_factor', 1.)
-        options['learning_rate_p'] *= options.get('scale_factor', 1.)
+        scale_factor = options.get('scale_factor', 1.)
+
+        options['learning_rate_p'] *= scale_factor
+        options['learning_rate_m'] *= scale_factor
+        options['decay'] *= scale_factor
+        # options['pattern_firing_rate'] /= scale_factor
 
         return options
 
@@ -62,14 +66,14 @@ class OriginalSingleLearner(OriginalBaseWorker):
 
         for i in range(self.epochs):
 
-            x = random()
-            if x > 0.5:
-                # random noise
-                input = torch.rand_like(image)
-                log_prefix = f"[Epoch#{i}] NOISE "
-            else:
-                input = image
-                log_prefix = f"[Epoch#{i}] PATTERN "
+            # x = random()
+            # if x > 0.5:
+            #     # random noise
+            #     input = torch.rand_like(image)
+            #     log_prefix = f"[Epoch#{i}] NOISE "
+            # else:
+            input = image
+            log_prefix = f"[Epoch#{i}] PATTERN "
 
             start_time = self.network.time
 
@@ -80,7 +84,8 @@ class OriginalSingleLearner(OriginalBaseWorker):
 
             self.logger.info(log_prefix + f"Score={self.score()} " + f"@{finish_time} (dt={finish_time-start_time})")
 
-            self.network.W.plot_weight_map()
+            if i % 100 == 0:
+                self.network.W.plot_weight_map()
 
         self.post_train()
 

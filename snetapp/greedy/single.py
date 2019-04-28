@@ -18,7 +18,7 @@ class GreedySingleLearner(GreedyBaseWorker):
         if options is None:
             self.options = self.get_default_options()
         else:
-            self.options = self.infer(options)
+            self.options = options
 
         super(GreedySingleLearner, self).__init__(self.options)
 
@@ -41,13 +41,13 @@ class GreedySingleLearner(GreedyBaseWorker):
             'scale_factor': 1.
         })
 
-        return self.infer(options)
+        return options
 
     def infer(self, options):
         options = super(GreedySingleLearner, self).infer(options)
 
         options['learning_rate_p'] *= options.get('scale_factor', 1.)
-        options['learning_rate_p'] *= options.get('scale_factor', 1.)
+        options['learning_rate_m'] *= options.get('scale_factor', 1.)
 
         return options
 

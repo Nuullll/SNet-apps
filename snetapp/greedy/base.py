@@ -23,7 +23,7 @@ class GreedyBaseWorker(Worker):
         if options is None:
             self.options = self.get_default_options()
         else:
-            self.options = self.infer(options)
+            self.options = options
 
         super(GreedyBaseWorker, self).__init__(self.options)
 
@@ -37,7 +37,7 @@ class GreedyBaseWorker(Worker):
             't_background_phase': 10,  # unit: dt
         })
 
-        return self.infer(options)
+        return options
 
 
 if __name__ == "__main__":

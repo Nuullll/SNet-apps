@@ -33,12 +33,13 @@ class GreedySingleLearner(GreedyBaseWorker):
             'include_categories': list(range(10)),
             'single': True,
             'output_number': 1,
-            'epochs': 100,
+            'epochs': 10000,
 
             'background_firing_rate': 10.,
             'learning_rate_p': 1.0,
             'learning_rate_m': 1.0,
-            'scale_factor': 1.
+            'scale_factor': 1.,
+            'w_init': 'fixed'
         })
 
         return options
@@ -76,7 +77,8 @@ class GreedySingleLearner(GreedyBaseWorker):
             pscore, bscore = self.score()
             self.logger.info(log_prefix + f"P={pscore}, B={bscore} " + f"@{finish_time} (dt={finish_time-start_time})")
 
-            self.network.W.plot_weight_map()
+            if i in [0, 10, 100, 1000, 10000]:
+                self.network.W.plot_weight_map(out_file=self.get_path(f'{i}-weights.jpg'))
 
         self.post_train()
 

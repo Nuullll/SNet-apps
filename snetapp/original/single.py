@@ -30,14 +30,15 @@ class OriginalSingleLearner(OriginalBaseWorker):
             'include_categories': list(range(10)),
             'single': True,
             'output_number': 1,
-            'epochs': 1000,
+            'epochs': 10000,
 
             'pattern_firing_rate': 1.,
             't_training_image': 200,
             'learning_rate_p': 1.0,
             'learning_rate_m': 1.0,
             'decay': 3e-5,
-            'scale_factor': 1.
+            'scale_factor': 1.0,
+            'w_init': 'fixed'
         })
 
         return options
@@ -85,7 +86,7 @@ class OriginalSingleLearner(OriginalBaseWorker):
             pscore, bscore = self.score()
             self.logger.info(log_prefix + f"P={pscore}, B={bscore} " + f"@{finish_time} (dt={finish_time-start_time})")
 
-            if i % (self.epochs / 2) == 0:
+            if i in [0, 10, 100, 1000, 10000]:
                 self.network.W.plot_weight_map(out_file=self.get_path(f'{i}-weight.jpg'))
 
         self.post_train()

@@ -39,6 +39,9 @@ class Worker(object):
 
         return worker
 
+    def get_path(self, filename):
+        return os.path.join(self.result_dir, filename)
+
     def __init__(self, options=None):
 
         if options is None:

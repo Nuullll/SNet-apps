@@ -108,7 +108,7 @@ class Worker(object):
             't_training_image': 200,    # unit: dt
             't_testing_image': 300,
 
-            'tracker_size': 100,
+            'tracker_size': 1000,
 
             # synapses
             'w_min': 0.1,
@@ -116,15 +116,15 @@ class Worker(object):
             'w_init': 'random',
             'learning_rate_p': 0.8,
             'learning_rate_m': 0.8,
-            'tau_p': 5,         # unit: dt
-            'tau_m': 5,
+            'tau_p': 3,         # unit: dt
+            'tau_m': 3,
 
             # LIF
             'v_th_rest': 0.4,
             'tau': 200.,        # unit: dt
             'refractory': 0,
             'res': 1.,
-            'adapt_factor': 1.
+            'adapt_factor': 1.1
         }
 
         return self.infer(options)

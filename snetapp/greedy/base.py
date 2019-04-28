@@ -32,19 +32,19 @@ class GreedyBaseWorker(Worker):
 
         options.update({
             'greedy': True,
-            'pattern_firing_rate': 1.0,  # unit: spikes/dt
-            'background_firing_rate': 12.,
-            't_background_phase': 20,  # unit: dt
+            'pattern_firing_rate': 1.,  # unit: spikes/dt
+            'background_firing_rate': 10.,
+            't_background_phase': 10,  # unit: dt
         })
 
         return self.infer(options)
 
 
 if __name__ == "__main__":
-    worker = GreedyBaseWorker()
-    worker.train()
+    # worker = GreedyBaseWorker()
+    # worker.train()
 
-    # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Sat-Apr-27-12-58-53-2019'
-    # worker = GreedyBaseWorker.load(path)
+    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Sun-Apr-28-13-19-21-2019'
+    worker = GreedyBaseWorker.load(path)
 
-    worker.test(worker.vote_test)
+    worker.test(worker.svm_test)

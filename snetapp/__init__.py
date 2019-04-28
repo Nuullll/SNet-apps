@@ -216,6 +216,7 @@ class Worker(object):
 
             if i % 1000 == 0:
                 self.network.W.plot_weight_map(out_file=os.path.join(self.result_dir, f'{i}-weights.jpg'))
+                self.network.W.plot_update_map(out_file=self.get_path(f'{i}-updates.jpg'))
 
         self.post_train()
 

@@ -24,7 +24,8 @@ class SpeedTester(GreedyBaseWorker):
             self.network.W.plot_weight_map(out_file=self.get_path(f"{i}-weight.jpg"))
             self.network.W.plot_update_map(out_file=self.get_path(f"{i}-update.jpg"))
 
-    def series_test(self, path):
+    @classmethod
+    def series_test(cls, path):
         for i in range(0, 20000, 1000):
             worker = SpeedTester.load(path, f"{i}-worker.pickle")
             worker.test(worker.svm_test, rerun=True)
@@ -38,6 +39,8 @@ class SpeedTester(GreedyBaseWorker):
 
 
 if __name__ == '__main__':
-    tester = SpeedTester()
+    # tester = SpeedTester()
+    # tester.train()
 
-    tester.train()
+    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\speed.py\Tue-Apr-30-13-42-45-2019'
+    SpeedTester.series_test(path)

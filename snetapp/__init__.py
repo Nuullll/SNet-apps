@@ -394,7 +394,7 @@ class Worker(object):
         self.summary['vote test accuracy'] = f"{hit_count}/{total} = {accuracy * 100}%"
 
     def export_summary(self, filename='summary.json'):
-        with open(self.get_path(filename), "wb") as f:
+        with open(self.get_path(filename), "w") as f:
             json.dump(self.summary, f, indent=4)
 
     def svm_test(self):

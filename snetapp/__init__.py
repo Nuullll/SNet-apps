@@ -31,11 +31,9 @@ class Worker(object):
     sg_key = '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'
 
     @classmethod
-    def load(cls, path):
-        with open(os.path.join(path, 'worker.pickle'), 'rb') as f:
+    def load(cls, path, filename='worker.pickle'):
+        with open(os.path.join(path, filename), 'rb') as f:
             worker = pickle.load(f)
-
-        worker.init_logger()
 
         return worker
 
@@ -57,7 +55,7 @@ class Worker(object):
 
         self.init_logger()
 
-        self._load_dataset()
+        self.load_dataset()
 
         self._load_network()
 
@@ -85,7 +83,7 @@ class Worker(object):
     def logger(self):
         return logging.getLogger()
 
-    def _load_dataset(self):
+    def load_dataset(self):
         self.dataset = MNISTLoader(self.options)
 
     def _load_network(self):
@@ -190,9 +188,22 @@ class Worker(object):
 
         sg.client.mail.send.post(request_body=message.get())
 
-    def save(self):
-        with open(os.path.join(self.result_dir, 'worker.pickle'), 'wb') as f:
+    def save(self, filename='worker.pickle'):
+        with open(os.path.join(self.result_dir, filename), 'wb') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+
+        # exclude dataset to speed up pickling
+        del state['dataset']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+        self.load_dataset()
+        self.init_logger()
 
     def train(self):
         self.logger.info("Start training.")

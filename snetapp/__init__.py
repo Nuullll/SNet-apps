@@ -212,9 +212,10 @@ class Worker(object):
 
             finish_time = self.network.time
             self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
-            self.logger.info(log_prefix + f"Thresholds={self.network.OUTPUT.v_th.numpy()}")
+            self.logger.info(log_prefix + f"Response={self.network.OUTPUT.spike_counts_history[-1]}")
+            self.logger.info(log_prefix + f"Threshold={self.network.OUTPUT.v_th}")
 
-            if i % 1000 == 0:
+            if i % 100 == 0:
                 self.network.W.plot_weight_map(out_file=os.path.join(self.result_dir, f'{i}-weights.jpg'))
                 self.network.W.plot_update_map(out_file=self.get_path(f'{i}-updates.jpg'))
 

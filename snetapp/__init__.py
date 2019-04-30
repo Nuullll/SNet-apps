@@ -226,11 +226,14 @@ class Worker(object):
             self.logger.info(log_prefix + f"Response={self.network.OUTPUT.spike_counts_history[-1]}")
             self.logger.info(log_prefix + f"Threshold={self.network.OUTPUT.v_th}")
 
-            if i % 100 == 0:
-                self.network.W.plot_weight_map(out_file=os.path.join(self.result_dir, f'{i}-weights.jpg'))
-                self.network.W.plot_update_map(out_file=self.get_path(f'{i}-updates.jpg'))
+            self.post_epoch(i)
 
         self.post_train()
+
+    def post_epoch(self, i):
+        if i % 100 == 0:
+            self.network.W.plot_weight_map(out_file=os.path.join(self.result_dir, f'{i}-weights.jpg'))
+            self.network.W.plot_update_map(out_file=self.get_path(f'{i}-updates.jpg'))
 
     def post_train(self):
         """

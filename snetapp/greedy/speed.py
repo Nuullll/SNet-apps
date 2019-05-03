@@ -8,12 +8,23 @@
 
 
 from snetapp.greedy.base import GreedyBaseWorker
+import glob
+import os
 
 
 class SpeedTester(GreedyBaseWorker):
     """
     Evaluates the convergence speed.
     """
+
+    def get_default_options(self):
+        options = super(SpeedTester, self).get_default_options()
+
+        options.update({
+            'background_firing_rate': 5.
+        })
+
+        return options
 
     def post_epoch(self, i):
         if i % 1000 == 0:
@@ -26,21 +37,23 @@ class SpeedTester(GreedyBaseWorker):
 
     @classmethod
     def series_test(cls, path):
-        for i in range(0, 20000, 1000):
-            worker = SpeedTester.load(path, f"{i}-worker.pickle")
-            worker.test(worker.svm_test, rerun=True)
+        test_func = SpeedTester.vote_test
 
-            worker.export_summary(f"{i}-summary.json")
+        checkpoints = glob.glob(os.path.join(path, "*worker.pickle"))
+        for checkpoint in [os.path.basename(x) for x in checkpoints]:
+            worker = SpeedTester.load(path, checkpoint)
+            if worker is None:
+                continue
+            worker.test(test_func, rerun=True)
 
-        # final evaluation
-        worker = SpeedTester.load(path)
-        worker.test(worker.svm_test, rerun=True)
-        worker.export_summary(f"final-summary.json")
+            worker.export_summary(checkpoint.replace(".pickle", "-summary.json"))
 
 
 if __name__ == '__main__':
-    # tester = SpeedTester()
-    # tester.train()
+    tester = SpeedTester()
+    tester.train()
 
-    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\speed.py\Tue-Apr-30-13-42-45-2019'
-    SpeedTester.series_test(path)
+    SpeedTester.series_test(tester.result_dir)
+
+    # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\speed.py\Tue-Apr-30-13-42-45-2019'
+    # SpeedTester.series_test(path)

@@ -66,6 +66,8 @@ class Worker(object):
         self.test_responses = []
         self.train_labels = []
         self.test_labels = []
+        self.train_fire_time = []
+        self.test_fire_time = []
 
         self.save()
 
@@ -134,7 +136,7 @@ class Worker(object):
 
     def _export_options(self, filename):
         with open(filename, 'w') as file:
-            json.dump(self.options, file)
+            json.dump(self.options, file, indent=4)
 
     def _prepare(self):
         """
@@ -298,6 +300,7 @@ class Worker(object):
         self.hit_list = []
         test_func()
 
+        self.export_summary(f"{test_func.__name__}-summary.json")
         self.send()
 
     def get_responses(self, flag='train'):

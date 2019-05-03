@@ -138,16 +138,17 @@ class GreedyBaseWorker(Worker):
 
         self.confidence_map = torch.zeros(len(self.options.get('include_categories')), self.network.OUTPUT.size)
 
-        for label, response, time in zip(self.train_responses, self.train_labels, self.train_fire_time.float()):
+        for label, response, time in zip(self.train_labels, self.train_responses, self.train_fire_time.float()):
             score = response / (time + 1)
 
             self.confidence_map[label] += score
 
-        for label, response, time in zip(self.test_responses, self.test_labels, self.test_fire_time.float()):
+        for label, response, time in zip(self.test_labels, self.test_responses, self.test_fire_time.float()):
             if response.sum() > 0:
                 _, ind = response.max(dim=0)
+                _, ind = self.confidence_map[:, ind].max(dim=0)
 
-                predicted = self.options.get('include_categories')[ind]
+                predicted = ind
             else:
                 predicted = label
 
@@ -170,10 +171,10 @@ class GreedyBaseWorker(Worker):
 
 
 if __name__ == "__main__":
-    worker = GreedyBaseWorker()
-    worker.train()
+    # worker = GreedyBaseWorker()
+    # worker.train()
 
-    # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Mon-Apr-29-04-41-53-2019'
-    # worker = GreedyBaseWorker.load(path)
+    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Fri-May--3-15-54-15-2019'
+    worker = GreedyBaseWorker.load(path)
 
     worker.test(worker.greedy_test)

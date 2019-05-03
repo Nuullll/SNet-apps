@@ -37,7 +37,7 @@ class SpeedTester(GreedyBaseWorker):
 
     @classmethod
     def series_test(cls, path):
-        test_func = SpeedTester.vote_test
+        test_func = SpeedTester.greedy_test
 
         checkpoints = glob.glob(os.path.join(path, "*worker.pickle"))
         for checkpoint in [os.path.basename(x) for x in checkpoints]:

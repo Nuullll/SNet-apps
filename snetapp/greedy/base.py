@@ -96,7 +96,7 @@ class GreedyBaseWorker(Worker):
 
             start_time = self.network.time
 
-            self.logger.info(log_prefix + f"Feeding image. @{start_time}")
+            self.logger.debug(log_prefix + f"Feeding image. @{start_time}")
             self.network.feed_image(image)
 
             self.network.learn_current_image(force_greedy=True)
@@ -107,7 +107,7 @@ class GreedyBaseWorker(Worker):
             response = self.network.OUTPUT.spike_counts_history[-1]
             time_used = self.network.OUTPUT.time_history[-1]
 
-            self.logger.info(log_prefix + f"Response={response.numpy()}")
+            self.logger.debug(log_prefix + f"Response={response.numpy()}")
 
             responses.append(response)
             labels.append(label)
@@ -170,11 +170,27 @@ class GreedyBaseWorker(Worker):
         self.summary['greedy test accuracy'] = f"{hit_count}/{total} = {accuracy * 100}%"
 
 
+def train_whole_mnist():
+    options = GreedyBaseWorker().options
+
+    options.update({
+        'include_categories': list(range(10)),
+        'output_number': 50,
+    })
+
+    worker = GreedyBaseWorker(options)
+    worker.train()
+
+    worker.test(worker.greedy_test)
+
+
 if __name__ == "__main__":
     # worker = GreedyBaseWorker()
     # worker.train()
 
-    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Fri-May--3-15-54-15-2019'
-    worker = GreedyBaseWorker.load(path)
+    # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Fri-May--3-15-54-15-2019'
+    # worker = GreedyBaseWorker.load(path)
+    #
+    # worker.test(worker.greedy_test)
 
-    worker.test(worker.greedy_test)
+    train_whole_mnist()

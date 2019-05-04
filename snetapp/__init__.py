@@ -221,15 +221,15 @@ class Worker(object):
 
             start_time = self.network.time
 
-            self.logger.info(log_prefix + "Feeding image. " + f"@{start_time}")
+            self.logger.debug(log_prefix + "Feeding image. " + f"@{start_time}")
             self.network.feed_image(image)
 
             self.network.learn_current_image()
 
             finish_time = self.network.time
             self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
-            self.logger.info(log_prefix + f"Response={self.network.OUTPUT.spike_counts_history[-1]}")
-            self.logger.info(log_prefix + f"Threshold={self.network.OUTPUT.v_th}")
+            self.logger.debug(log_prefix + f"Response={self.network.OUTPUT.spike_counts_history[-1]}")
+            self.logger.debug(log_prefix + f"Threshold={self.network.OUTPUT.v_th}")
 
             self.post_epoch(i)
 

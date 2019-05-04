@@ -188,7 +188,10 @@ class Worker(object):
 
         message.add_attachment(attachment)
 
-        sg.client.mail.send.post(request_body=message.get())
+        try:
+            sg.client.mail.send.post(request_body=message.get())
+        except Exception as e:
+            self.logger.warning("Failed to send email: " + e)
 
     def save(self, filename='worker.pickle'):
         with open(os.path.join(self.result_dir, filename), 'wb') as f:

@@ -37,23 +37,20 @@ class SpeedTester(GreedyBaseWorker):
 
     @classmethod
     def series_test(cls, path):
-        test_func = SpeedTester.greedy_test
 
         checkpoints = glob.glob(os.path.join(path, "*worker.pickle"))
         for checkpoint in [os.path.basename(x) for x in checkpoints]:
             worker = SpeedTester.load(path, checkpoint)
-            if worker is None:
-                continue
-            worker.test(test_func, rerun=True)
+            worker.test(worker.greedy_test, rerun=True)
 
             worker.export_summary(checkpoint.replace(".pickle", "-summary.json"))
 
 
 if __name__ == '__main__':
-    tester = SpeedTester()
-    tester.train()
+    # tester = SpeedTester()
+    # tester.train()
+    #
+    # SpeedTester.series_test(tester.result_dir)
 
-    SpeedTester.series_test(tester.result_dir)
-
-    # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\speed.py\Tue-Apr-30-13-42-45-2019'
-    # SpeedTester.series_test(path)
+    path = r'E:\Projects\SNet-apps\snetapp\greedy\results\speed.py\Fri-May--3-17-23-42-2019'
+    SpeedTester.series_test(path)

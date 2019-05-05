@@ -37,6 +37,20 @@ class Worker(object):
 
         return worker
 
+    @classmethod
+    def relay(cls, relay_path, filename='worker.pickle'):
+        worker = Worker.load(relay_path, filename=filename)
+
+        worker.options.update({
+            'relay_worker': os.path.join(relay_path, filename)
+        })
+
+        worker.summary = {}
+        worker.prepare()
+        worker.init_logger()
+
+        return worker
+
     def get_path(self, filename):
         return os.path.join(self.result_dir, filename)
 
@@ -51,7 +65,7 @@ class Worker(object):
 
         self.summary = {}
 
-        self._prepare()
+        self.prepare()
 
         self.init_logger()
 
@@ -138,7 +152,7 @@ class Worker(object):
         with open(filename, 'w') as file:
             json.dump(self.options, file, indent=4)
 
-    def _prepare(self):
+    def prepare(self):
         """
         Creates `results` directory for training.
         """

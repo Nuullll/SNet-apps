@@ -130,7 +130,7 @@ class Worker(object):
             'tracker_size': 1000,
 
             # synapses
-            'w_min': 0.1,
+            'w_min': 1.0,
             'w_max': 5.0,
             'w_init': 'random',
             'learning_rate_p': 0.8,
@@ -205,7 +205,7 @@ class Worker(object):
         try:
             sg.client.mail.send.post(request_body=message.get())
         except Exception as e:
-            self.logger.warning("Failed to send email: " + e)
+            self.logger.warning("Failed to send email.")
 
     def save(self, filename='worker.pickle'):
         with open(os.path.join(self.result_dir, filename), 'wb') as f:

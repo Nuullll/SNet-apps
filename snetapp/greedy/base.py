@@ -192,8 +192,9 @@ def relay_train(relay_path):
 
 
 if __name__ == "__main__":
-    # worker = GreedyBaseWorker()
-    # worker.train()
+    worker = GreedyBaseWorker()
+    worker.train()
+    worker.test(worker.greedy_test)
 
     # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Fri-May--3-15-54-15-2019'
     # worker = GreedyBaseWorker.load(path)
@@ -202,5 +203,5 @@ if __name__ == "__main__":
 
     # train_whole_mnist()
 
-    relay_path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Sat-May--4-13-22-05-2019'
-    relay_train(relay_path)
+    # relay_path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Sun-May--5-01-14-09-2019'
+    # relay_train(relay_path)

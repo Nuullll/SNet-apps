@@ -175,7 +175,11 @@ def train_whole_mnist():
 
     options.update({
         'include_categories': list(range(10)),
+        't_training_image': 70,
+        'v_th_rest': 0.15,
         'output_number': 50,
+
+        # 'update_variation': 0.5,
     })
 
     worker = GreedyBaseWorker(options)
@@ -192,16 +196,16 @@ def relay_train(relay_path):
 
 
 if __name__ == "__main__":
-    worker = GreedyBaseWorker()
-    worker.train()
-    worker.test(worker.greedy_test)
+    # worker = GreedyBaseWorker()
+    # worker.train()
+    # worker.test(worker.greedy_test)
 
     # path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Fri-May--3-15-54-15-2019'
     # worker = GreedyBaseWorker.load(path)
     #
     # worker.test(worker.greedy_test)
 
-    # train_whole_mnist()
+    train_whole_mnist()
 
-    # relay_path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Sun-May--5-01-14-09-2019'
+    # relay_path = r'E:\Projects\SNet-apps\snetapp\greedy\results\base.py\Tue-May--7-16-47-15-2019'
     # relay_train(relay_path)

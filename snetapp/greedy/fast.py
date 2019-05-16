@@ -40,7 +40,8 @@ class FastTester(SpeedTester):
             'w_max': 5.,
             'w_min': 1.0,
 
-            'update_variation': 0.5,
+            # 'update_variation': 0.1,
+            'failure_rate': 0.9
         })
 
         return options

@@ -10,6 +10,7 @@
 from snetapp import Worker
 import torch
 import os
+torch.set_default_tensor_type(torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor)
 
 
 class GreedyBaseWorker(Worker):

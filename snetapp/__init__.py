@@ -20,6 +20,7 @@ import base64
 import pickle
 import torch
 from sklearn.svm import SVC
+torch.set_default_tensor_type(torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor)
 
 
 class Worker(object):

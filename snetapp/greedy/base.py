@@ -108,7 +108,7 @@ class GreedyBaseWorker(Worker):
             response = self.network.OUTPUT.spike_counts_history[-1]
             time_used = self.network.OUTPUT.time_history[-1]
 
-            self.logger.debug(log_prefix + f"Response={response.numpy()}")
+            self.logger.debug(log_prefix + f"Response={response}")
 
             responses.append(response)
             labels.append(label)

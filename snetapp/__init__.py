@@ -348,7 +348,7 @@ class Worker(object):
 
             response = self.network.OUTPUT.spike_counts_history[-1]
 
-            self.logger.info(log_prefix + f"Response={response.numpy()}")
+            self.logger.info(log_prefix + f"Response={response}")
 
             responses.append(response)
             labels.append(label)

@@ -225,7 +225,7 @@ class Worker(object):
         self.load_dataset()
         self.init_logger()
 
-    def train(self):
+    def train(self, prefix=''):
         self.logger.info("Start training.")
 
         self.network.training_mode()
@@ -246,17 +246,17 @@ class Worker(object):
             self.logger.debug(log_prefix + f"Response={self.network.OUTPUT.spike_counts_history[-1]}")
             self.logger.debug(log_prefix + f"Threshold={self.network.OUTPUT.v_th}")
 
-            self.post_epoch(i)
+            self.post_epoch(i, prefix=prefix)
 
             if i % 1000 == 0:
                 self.logger.info(log_prefix + "Learned. " + f"@{finish_time} (dt={finish_time-start_time})")
 
         self.post_train()
 
-    def post_epoch(self, i):
+    def post_epoch(self, i, prefix=''):
         if i % 1000 == 0:
-            self.network.W.plot_weight_map(out_file=self.get_path(f'{i}-weights.jpg'))
-            self.network.W.plot_update_map(out_file=self.get_path(f'{i}-updates.jpg'))
+            self.network.W.plot_weight_map(out_file=self.get_path(f'{prefix}{i}-weights.jpg'))
+            self.network.W.plot_update_map(out_file=self.get_path(f'{prefix}{i}-updates.jpg'))
 
     def post_train(self):
         """

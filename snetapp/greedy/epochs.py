@@ -26,12 +26,12 @@ class TrainForEpochs(GreedyBaseWorker):
         options.update({
             'greedy': True,
             'pattern_firing_rate': 1.,  # unit: spikes/dt
-            'background_firing_rate': 20.,
+            'background_firing_rate': 10.,
             't_background_phase': 10,  # unit: dt
 
             'include_categories': list(range(10)),
-            't_training_image': 70,
-            'v_th_rest': 0.14,
+            't_training_image': 200,
+            'v_th_rest': 0.4,
             'output_number': 50,
         })
 

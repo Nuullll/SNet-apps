@@ -57,5 +57,17 @@ def train_baseline():
     worker.test(worker.greedy_test)
 
 
+def train_learning_rate_d2d():
+    options = TrainWithVariation().options
+
+    for v in [0.1, 0.25, 0.5, 1.0]:
+
+        options.update({'learning_rate_d2d_variation': v})
+        worker = TrainWithVariation(options)
+
+        worker.train(prefix=f'lr-d2d-{v}-')
+        worker.test(worker.greedy_test)
+
+
 if __name__ == '__main__':
-    train_baseline()
+    train_learning_rate_d2d()

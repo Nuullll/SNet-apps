@@ -42,9 +42,9 @@ class GreedyBaseWorker(Worker):
 
         return options
 
-    def test(self, test_func, rerun=False):
+    def test(self, test_func, rerun=False, prefix=''):
         if not test_func == self.greedy_test:
-            super(GreedyBaseWorker, self).test(test_func=test_func, rerun=rerun)
+            super(GreedyBaseWorker, self).test(test_func=test_func, rerun=rerun, prefix=prefix)
 
             return
 
@@ -75,7 +75,7 @@ class GreedyBaseWorker(Worker):
         self.hit_list = []
         test_func()
 
-        self.export_summary(f"{test_func.__name__}-summary.json")
+        self.export_summary(f"{prefix}{test_func.__name__}-summary.json")
         self.send()
 
     def get_greedy_responses(self, flag='train'):

@@ -266,6 +266,8 @@ class Worker(object):
         # self.network.save_model(self.result_dir)
         self.save()
 
+        self.network.W.plot_weight_map(self.get_path('weights.png'))
+        self.network.W.plot_update_map(self.get_path('updates.png'))
         self.summarize('train')
 
         self.send()
@@ -280,8 +282,8 @@ class Worker(object):
 
         self.summary['options'] = to_html(self.options)
 
-        image_file = os.path.join(self.result_dir, 'weights.jpg')
-        self.network.W.plot_weight_map(image_file)
+        image_file = os.path.join(self.result_dir, 'weights.png')
+        # self.network.W.plot_weight_map(image_file)
 
         self.summary['image_file'] = image_file
 
@@ -293,7 +295,7 @@ class Worker(object):
 
         self.summary[phase] = to_html(phase_summary)
 
-    def test(self, test_func, rerun=False):
+    def test(self, test_func, rerun=False, prefix=''):
         # change network mode
         self.network.inference_mode()
         # show weights
@@ -321,7 +323,7 @@ class Worker(object):
         self.hit_list = []
         test_func()
 
-        self.export_summary(f"{test_func.__name__}-summary.json")
+        self.export_summary(f"{prefix}{test_func.__name__}-summary.json")
         self.send()
 
     def get_responses(self, flag='train'):

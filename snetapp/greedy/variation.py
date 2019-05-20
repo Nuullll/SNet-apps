@@ -60,14 +60,39 @@ def train_baseline():
 def train_learning_rate_d2d():
     options = TrainWithVariation().options
 
-    for v in [0.1, 0.25, 0.5, 1.0]:
+    # for v in [0.1, 0.25, 0.5, 1.0]:
+    for v in [0.5, 1.0]:
 
         options.update({'learning_rate_d2d_variation': v})
         worker = TrainWithVariation(options)
 
-        worker.train(prefix=f'lr-d2d-{v}-')
+        prefix = f'lr-d2d-{v}-'
+        worker.train(prefix=prefix)
         worker.test(worker.greedy_test)
+
+        # additional test
+        for res in ['8000', '9000']:
+            tester = TrainWithVariation.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+            tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
+
+def train_learning_rate_c2c():
+    options = TrainWithVariation().options
+
+    for v in [0.1, 0.25, 0.5, 1.0]:
+
+        options.update({'learning_rate_c2c_variation': v})
+        worker = TrainWithVariation(options)
+
+        prefix = f'lr-c2c-{v}-'
+        worker.train(prefix=prefix)
+        worker.test(worker.greedy_test)
+
+        # additional test
+        for res in ['8000', '9000']:
+            tester = TrainWithVariation.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+            tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
 
 
 if __name__ == '__main__':
-    train_learning_rate_d2d()
+    train_learning_rate_c2c()

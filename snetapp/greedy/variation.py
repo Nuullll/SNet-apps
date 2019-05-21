@@ -52,9 +52,16 @@ class TrainWithVariation(GreedyBaseWorker):
 
 
 def train_baseline():
+    prefix = 'baseline-'
+
     worker = TrainWithVariation()
     worker.train(prefix='baseline-')
     worker.test(worker.greedy_test)
+
+    # additional test
+    for res in ['8000', '9000']:
+        tester = TrainWithVariation.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+        tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
 
 
 def train_learning_rate_d2d():
@@ -114,4 +121,7 @@ def train_learning_rate_combine():
 
 
 if __name__ == '__main__':
+    train_baseline()
+    train_learning_rate_d2d()
+    train_learning_rate_c2c()
     train_learning_rate_combine()

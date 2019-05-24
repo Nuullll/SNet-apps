@@ -23,12 +23,12 @@ class GreedyBaseWorker(Worker):
     """
 
     def __init__(self, options=None):
-        if options is None:
-            self.options = self.get_default_options()
-        else:
-            self.options = options
+        self.options = self.get_default_options()
 
         super(GreedyBaseWorker, self).__init__(self.options)
+
+        if options:
+            self.options.update(options)
 
     def get_default_options(self):
         options = super(GreedyBaseWorker, self).get_default_options()

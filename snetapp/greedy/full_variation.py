@@ -112,6 +112,64 @@ class FullJobWithVariation(TrainWithVariation):
                 tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
                 tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
 
+    @classmethod
+    def train_window_d2d_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'window-d2d-{v}-'
+
+            worker = cls({
+                'window_d2d_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
+    @classmethod
+    def train_window_c2c_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'window-c2c-{v}-'
+
+            worker = cls({
+                'window_c2c_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
+    @classmethod
+    def train_window_combine_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'window-combine-{v}-'
+
+            worker = cls({
+                'window_c2c_variation': v,
+                'window_d2d_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
 
 if __name__ == '__main__':
-    FullJobWithVariation.train_lr_d2d_variation()
+    FullJobWithVariation.train_baseline()

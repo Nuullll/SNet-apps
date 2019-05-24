@@ -18,10 +18,10 @@ class FullJobWithVariation(TrainWithVariation):
 
         self.options = self.get_default_options()
 
-        super(FullJobWithVariation, self).__init__(self.options)
-
         if options:
             self.options.update(options)
+
+        super(FullJobWithVariation, self).__init__(self.options)
 
     def get_default_options(self):
         options = super(FullJobWithVariation, self).get_default_options()
@@ -63,6 +63,45 @@ class FullJobWithVariation(TrainWithVariation):
 
             worker = cls({
                 'learning_rate_d2d_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
+    @classmethod
+    def train_lr_c2c_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'lr-c2c-{v}-'
+
+            worker = cls({
+                'learning_rate_c2c_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
+    @classmethod
+    def train_lr_combine_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'lr-combine-{v}-'
+
+            worker = cls({
+                'learning_rate_d2d_variation': v,
+                'learning_rate_c2c_variation': v
             })
 
             worker.train(prefix)

@@ -25,10 +25,10 @@ class GreedyBaseWorker(Worker):
     def __init__(self, options=None):
         self.options = self.get_default_options()
 
-        super(GreedyBaseWorker, self).__init__(self.options)
-
         if options:
             self.options.update(options)
+
+        super(GreedyBaseWorker, self).__init__(self.options)
 
     def get_default_options(self):
         options = super(GreedyBaseWorker, self).get_default_options()

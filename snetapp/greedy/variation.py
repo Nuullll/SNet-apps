@@ -16,10 +16,10 @@ class TrainWithVariation(GreedyBaseWorker):
 
         self.options = self.get_default_options()
 
-        super(TrainWithVariation, self).__init__(self.options)
-
         if options:
             self.options.update(options)
+
+        super(TrainWithVariation, self).__init__(self.options)
 
     def get_default_options(self):
         options = super(TrainWithVariation, self).get_default_options()

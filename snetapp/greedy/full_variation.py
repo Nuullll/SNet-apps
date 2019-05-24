@@ -54,6 +54,25 @@ class FullJobWithVariation(TrainWithVariation):
             tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
             tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
 
+    @classmethod
+    def train_lr_d2d_variation(cls):
+
+        for v in [0.1, 0.3, 0.5]:
+
+            prefix = f'lr-d2d-{v}-'
+
+            worker = cls({
+                'learning_rate_d2d_variation': v
+            })
+
+            worker.train(prefix)
+            worker.test(worker.greedy_test)
+
+            # additional test
+            for res in worker.eval_list:
+                tester = cls.load(worker.result_dir, filename=f"{prefix}{res}-worker.pickle")
+                tester.test(tester.greedy_test, rerun=True, prefix=f"{prefix}{res}-")
+
 
 if __name__ == '__main__':
-    FullJobWithVariation.train_baseline()
+    FullJobWithVariation.train_lr_d2d_variation()

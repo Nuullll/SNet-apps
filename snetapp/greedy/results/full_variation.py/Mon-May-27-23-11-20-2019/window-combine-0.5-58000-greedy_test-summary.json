@@ -1,0 +1,6 @@
+{
+    "options": "image_size: (28, 28)<br>include_categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]<br>output_number: 50<br>dt: 0.001<br>t_training_image: 200<br>t_testing_image: 300<br>tracker_size: 1000<br>w_min: 1.0<br>w_max: 5.0<br>w_init: random<br>learning_rate_p: 0.8<br>learning_rate_m: 0.8<br>tau_p: 3<br>tau_m: 3<br>v_th_rest: 0.4<br>tau: 200.0<br>refractory: 0<br>res: 1.0<br>adapt_factor: 1.1<br>greedy: True<br>pattern_firing_rate: 1.0<br>background_firing_rate: 7.0<br>t_background_phase: 10<br>window_c2c_variation: 0.5<br>window_d2d_variation: 0.5<br>input_number: 784<br>",
+    "image_file": "/root/SNet-apps/snetapp/greedy/results/full_variation.py/Mon-May-27-23-11-20-2019/weights.png",
+    "test": "v_th: tensor([0.5324, 0.5435, 0.5165, 0.4839, 0.4764, 0.5170, 0.5166, 0.5466, 0.5022,\n        0.4756, 0.5546, 0.5364, 0.4893, 0.5286, 0.5067, 0.5193, 0.5003, 0.5201,\n        0.4975, 0.5289, 0.5233, 0.5362, 0.4981, 0.5330, 0.5069, 0.4943, 0.5057,\n        0.4763, 0.5185, 0.5624, 0.5237, 0.4534, 0.5220, 0.4793, 0.4936, 0.5273,\n        0.5390, 0.5184, 0.4901, 0.5172, 0.5104, 0.5047, 0.5369, 0.5326, 0.5255,\n        0.4936, 0.5183, 0.5062, 0.5602, 0.5034])<br>time: 11537980<br>sample_count: 10000<br>",
+    "greedy test accuracy": "5467/10000 = 54.669999999999995%"
+}
